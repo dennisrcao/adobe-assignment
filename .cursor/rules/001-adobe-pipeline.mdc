@@ -1,0 +1,11 @@
+---
+description: Adobe creative automation monorepo — cross-cutting conventions and where to read more
+alwaysApply: true
+---
+
+# Adobe assignment — core
+
+- **Python:** `uv` only (e.g. `uv run`); API under `apps/api/`, Ruff, `str | None`, services per external system, `APIError` hierarchy, parametric `logger` (no f-strings in log calls). **FastAPI specifics** (async vs blocking routes, Pydantic v2, dependencies): [005-fastapi-python.mdc](005-fastapi-python.mdc).
+- **Layout:** `apps/api/` (FastAPI), `apps/web/` (Vite + React), `packages/campaign-schema/` (shared Pydantic + brand config), `config/`, `input_assets/`, `output/` (gitignored), `cache/` (gitignored).
+- **Source of truth for detail:** `CLAUDE.md` at repo root (architecture, run commands, full TS/Python standards).
+- **PRD/planning:** [PRD.md](../../z_Documents/PRD.md), [plan.md](../../z_Documents/plan.md) as applicable.

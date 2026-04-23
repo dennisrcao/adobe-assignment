@@ -1,0 +1,407 @@
+@use '../../styles/variables' as *;
+
+.page {
+  min-height: 100vh;
+  background: $bg;
+  color: $text;
+  padding: var(--page-padding-y) var(--page-padding-x);
+  font-family: $font-body, system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .pageHeader {
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+
+    .subtitle {
+      color: $text-dimmer;
+      font-size: 13px;
+      margin: 0;
+      line-height: 1.5;
+
+      code {
+        font-family: $font-mono;
+        font-size: 12px;
+        color: $text-dim;
+        background: $bg-raised;
+        padding: 1px 5px;
+        border-radius: 4px;
+        border: 1px solid $border;
+      }
+    }
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: $bg-sidebar;
+    border: 1px solid $border;
+    border-radius: 10px;
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .fieldHint {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.45;
+        color: $text-dimmer;
+        font-weight: 400;
+
+        code {
+          font-family: $font-mono;
+          font-size: 11px;
+          color: $text-dim;
+          background: $bg;
+          padding: 1px 5px;
+          border-radius: 4px;
+          border: 1px solid $border-light;
+        }
+      }
+
+      label {
+        font-size: 12px;
+        color: $text-dimmer;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      input,
+      textarea,
+      select {
+        background: $bg;
+        border: 1px solid $border-light;
+        border-radius: 6px;
+        color: $text;
+        font-size: 14px;
+        padding: 10px 12px;
+        font-family: inherit;
+        resize: vertical;
+
+        &:focus {
+          outline: none;
+          border-color: $text-dim;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      select {
+        resize: none;
+        max-width: 100%;
+        cursor: pointer;
+      }
+
+      textarea {
+        line-height: 1.5;
+        min-height: 80px;
+      }
+
+      .productsBlock {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .productRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 10px;
+        align-items: end;
+
+        .removeBtn {
+          padding: 10px 12px;
+          background: transparent;
+          border: 1px solid color-mix(in srgb, $red 50%, transparent);
+          color: $red;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 12px;
+          max-height: 40px;
+          font-family: inherit;
+          transition: border-color 0.15s, color 0.15s;
+
+          &:hover:not(:disabled) {
+            border-color: $red;
+            color: #ff6b6b;
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      }
+
+      .addBtn {
+        padding: 10px 16px;
+        align-self: flex-start;
+        background: $bg-hover;
+        color: $text-dim;
+        border: 1px solid $border-light;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.15s, color 0.15s;
+
+        &:hover:not(:disabled) {
+          border-color: $text-dimmer;
+          color: $text-muted;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+
+      .submitBtn,
+      .cancelBtn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid transparent;
+        font-family: inherit;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+      }
+
+      .submitBtn {
+        background: $text;
+        color: $bg;
+
+        &:hover {
+          background: #fff;
+        }
+      }
+
+      .cancelBtn {
+        background: transparent;
+        color: $text-dim;
+        border-color: $border-light;
+
+        &:hover {
+          border-color: $text-dimmer;
+          color: $text-muted;
+        }
+      }
+    }
+
+    .error {
+      padding: 10px 12px;
+      background: rgba($red, 0.1);
+      border: 1px solid rgba($red, 0.3);
+      border-radius: 6px;
+      color: #ff8080;
+      font-size: 13px;
+    }
+  }
+
+  .progressWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .progressLabel {
+      font-size: 12px;
+      color: $text-dimmer;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .progressTrack {
+      height: 3px;
+      background: $bg-hover;
+      border-radius: 2px;
+      overflow: hidden;
+
+      .progressFill {
+        height: 100%;
+        background: $text;
+        border-radius: 2px;
+        transition: width 0.4s ease;
+
+        &.progressFillIndeterminate {
+          width: 30%;
+          background: linear-gradient(90deg, transparent, $text, transparent);
+          background-size: 200% 100%;
+          animation: campaignShimmer 1.4s infinite linear;
+        }
+      }
+    }
+
+    .phaseHint {
+      margin: 10px 0 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: $text-dimmer;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+
+      code {
+        font-family: $font-mono;
+        font-size: 11px;
+        color: $text-dim;
+        background: $bg-raised;
+        padding: 1px 4px;
+        border-radius: 4px;
+        border: 1px solid $border;
+      }
+    }
+
+    .heroSteps {
+      margin: 8px 0 0 0;
+      padding-left: 1.1rem;
+      font-size: 12px;
+      color: $text-muted;
+      line-height: 1.5;
+    }
+  }
+
+  .compliance {
+    padding: 12px 16px;
+    background: $bg-sidebar;
+    border: 1px solid $border;
+    border-radius: 8px;
+    font-size: 13px;
+    color: $text-muted;
+    line-height: 1.4;
+  }
+
+  .checkTable {
+    padding: 12px 16px;
+    background: $bg-sidebar;
+    border: 1px solid $border;
+    border-radius: 8px;
+    font-size: 13px;
+    color: $text-dim;
+
+    .checkTableTitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: $text;
+      margin: 0 0 8px 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .muted {
+      color: $text-dimmer;
+    }
+  }
+
+  .summary {
+    padding: 16px 20px;
+    background: $bg-raised;
+    border: 1px solid $border;
+    border-radius: 10px;
+    font-size: 14px;
+    color: $text-dim;
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: $text;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      margin: 4px 0;
+    }
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .productSection {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .productLabel {
+        font-size: 12px;
+        font-weight: 500;
+        color: $text-dimmer;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .ratioRow {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        align-items: start;
+
+        .card {
+          background: $bg-sidebar;
+          border: 1px solid $border;
+          border-radius: 8px;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+
+          .thumb {
+            width: 100%;
+            object-fit: cover;
+            display: block;
+            background: $bg;
+            border-bottom: 1px solid $border;
+
+            &.ratio1x1  { aspect-ratio: 1; }
+            &.ratio9x16 { aspect-ratio: 9 / 16; }
+            &.ratio16x9 { aspect-ratio: 16 / 9; }
+          }
+
+          .caption {
+            padding: 8px 10px;
+            font-size: 12px;
+            color: $text-dimmer;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes campaignShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}

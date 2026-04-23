@@ -1,0 +1,56 @@
+---
+description: Zustand store pattern for web/src/stores — selector-first, actions namespace, no whole-store subscribe
+globs:
+  - "apps/web/src/stores/**/*.ts"
+  - "apps/web/src/**/*.tsx"
+alwaysApply: false
+---
+
+# Zustand (`apps/web/src/stores`)
+
+The campaign app currently uses **local React state only**. If you add `apps/web/src/stores/`, follow the selector-first pattern below.
+
+## Do
+
+- **Keep `create()` private** — do not export the hook returned by `create` for general use. Only export named selector hooks, an actions hook, and a `getXxxStore()` helper.
+- **Atomic selectors** — one exported hook per piece of state (or a tight slice); prefer primitives and shallow comparisons. Use a hook factory when a selector needs parameters.
+- **`actions` namespace** — put all mutations in `state.actions.{...}`. The `actions` object reference stays stable; components can `useXxxStore((s) => s.actions)` or a dedicated `useXxxActions()` that returns `actions` only.
+- **`useXxxActions()` in components** — subscribe only to `actions` when you only need to call methods.
+- **`getXxxStore()` for non-React code** — `export const getXxxStore = () => useXxxStore.getState()` for event handlers, modules outside React, or one-off reads without subscribing.
+- **Compute in the selector** — derive values inside `(state) => …`. Do not call instance/getter methods in the selector (returned function references break equality and cause extra renders).
+
+## Don't
+
+- **`useWholeStore()` with no argument** — subscribing to the entire store re-renders on any field change. Never export a pattern that encourages `useAuthStore()` then destructuring everything.
+- **Inline ad-hoc selectors in components** — prefer `useCount()` (defined next to the store) over `useStore((s) => s.count)` scattered in UI files, so subscriptions stay consistent and discoverable.
+
+## Server vs client state
+
+Use **TanStack Query** (or equivalent) for **server/cache** state when present. Use **Zustand** for **client** state (UI, session handles, ephemeral flags).
+
+## Canonical shape
+
+```typescript
+interface MyState {
+  count: number;
+  name: string | null;
+  actions: {
+    increment: () => void;
+    setName: (name: string) => void;
+  };
+}
+
+const useMyStore = create<MyState>((set) => ({
+  count: 0,
+  name: null,
+  actions: {
+    increment: () => set((s) => ({ count: s.count + 1 })),
+    setName: (name) => set({ name }),
+  },
+}));
+
+export const useCount = () => useMyStore((s) => s.count);
+export const useName = () => useMyStore((s) => s.name);
+export const useMyActions = () => useMyStore((s) => s.actions);
+export const getMyStore = () => useMyStore.getState();
+```

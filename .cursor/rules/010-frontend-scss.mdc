@@ -1,0 +1,40 @@
+---
+description: Colocated React + SCSS modules — nesting follows JSX, design tokens, className patterns
+globs:
+  - "apps/web/src/**/*.tsx"
+  - "apps/web/src/**/*.module.scss"
+alwaysApply: false
+---
+
+# Frontend (this repo: `apps/web/src/`)
+
+## Basics
+
+- **Colocate** `ComponentName.tsx` with `ComponentName.module.scss` under the same folder.
+- **Tokens:** Reuse [_variables.scss](../../apps/web/src/styles/_variables.scss) where appropriate (`$bg`, `$text`, `$border`, `$accent`, etc.).
+- **className:** Ternary or `[a, b].filter(Boolean).join(' ')`; follow patterns in [CampaignPage.module.scss](../../apps/web/src/pages/Campaign/CampaignPage.module.scss) and `_globals.scss`.
+- **Types:** Inline `type` for small props; stable list keys (prefer domain ids, not array index when data allows).
+- **Path alias:** `@/` → `apps/web/src/`.
+
+## SCSS nesting mirrors JSX (2–4 levels)
+
+The Sass nesting hierarchy must follow the same shape as the JSX tree (same order of regions and depth). That keeps styles easy to read next to the markup and makes refactors safer.
+
+**Do**
+
+- **Root** — One block for the root element's `className` (e.g. `.page`, `.card`) holds layout for the whole component tree.
+- **Nested** — For each child using `styles.foo`, add a nested rule for `.foo` under the root (or the correct parent) so the file reads top-to-bottom like the component.
+- **Rename together** — If you restructure JSX (new wrapper, split a section), update the same levels in the SCSS; avoid orphan classes at the top level that only apply deep inside a subtree unless shared on purpose.
+
+**Don't**
+
+- **Flat list of unrelated class blocks** that don't reflect component sections when the JSX is clearly nested.
+- **Diverging order** where SCSS section order fights the top-to-bottom flow of the TSX (mixins/variables at the top of the file are fine).
+
+**Example**
+
+If JSX is `div.root > div.toolbar > button.btn`, the module should have `.root { … .toolbar { … .btn { … } } }`, not `.btn` as a top-level block sitting far from `.root` in a way that hides the parent relationship.
+
+## Pairing
+
+If you change layout/styling in TSX, update the colocated `.module.scss` in the same change. Shared design tokens live under `apps/web/src/styles/_variables.scss` (Sass `@use`).

@@ -1,0 +1,51 @@
+---
+description: FastAPI — async vs sync routes, Pydantic v2, dependencies, structure; aligns with common fastapi-best-practices guides
+globs:
+  - "apps/api/**/*.py"
+  - "packages/**/*.py"
+alwaysApply: false
+---
+
+# FastAPI (`apps/api/`)
+
+These rules follow widely used **FastAPI best-practices** (async boundaries, Pydantic v2, dependencies). They **add to** the same material as the repository root file `CLAUDE.md` (Ruff, `APIError`, logging, service layer)—not replace it.
+
+## Versions & toolchain
+
+Prefer current stacks: Python **3.12+** (see `apps/api/pyproject.toml` `requires-python`), FastAPI **0.115+**, Pydantic **2.7+**; **`uv run`** for commands; **Ruff** for lint/format (repo root `pyproject.toml` `[tool.ruff]`, and `ruff` in `apps/api` dev deps). For API tests, use **httpx** + **`ASGITransport`** and **`dependency_overrides`**.
+
+## Project structure
+
+**Greenfield / large apps:** organize by **bounded context** under `src/`: per domain, `router.py`, `schemas.py`, `models.py`, `service.py`, `dependencies.py`, etc., as needed. Cross-domain imports: explicit modules, no `from … import *`.
+
+**This repo:** shared brief types live in `packages/campaign-schema/`; the app uses a small split under [`apps/api/src/routes/`](../../apps/api/src/routes/) and [`apps/api/src/services/`](../../apps/api/src/services/). Keep that unless a feature clearly deserves its own subpackage; then colocate router + schemas + service for that domain.
+
+## Async routes and blocking work
+
+- **`async def`** when the handler awaits **non-blocking** I/O (HTTP clients, DB drivers that are async, `asyncio` work).
+- **`def`** (sync) when the body does **blocking** I/O or CPU-heavy sync libs so Starlette runs it in a **threadpool**—do **not** use `async def` and then call blocking code (that stalls the event loop).
+- From an **`async def`** route, use **`run_in_threadpool`** (Starlette) to run short blocking callables if you cannot make the route sync.
+- Long-running or heavy work → **background worker / queue** (not the request worker).
+
+Service functions should match the same idea: **async** when they `await` real async I/O; otherwise keep them **sync** and call them from a sync route or from `run_in_threadpool`.
+
+## Pydantic v2
+
+- Use **`model_dump()`** / **`model_validate()`**—not v1 **`.dict()`** / **`json_encoders`** unless you are in a legacy shim.
+- Use **`Field()`** when you need validation or schema metadata; skip it when the type alone is enough (matches `CLAUDE.md` “minimal Field”).
+- Prefer **`Annotated[T, Depends(...)]`** for injected parameters in route signatures.
+
+## Dependencies
+
+- Dependencies are **cached per request**; make them safe to call multiple times.
+- Prefer **`async def`** dependencies when they perform I/O; centralize checks (e.g. load resource, raise 404) instead of repeating in every route.
+
+## Persistence & side effects (when relevant)
+
+This assignment pipeline does not assume an app-owned SQL schema or self-managed ORM migrations. If you add auth or a backing store in our usual stack, that is **Supabase** (API + RLS, JWTs from Supabase). For short, in-process work that is OK to drop on crash, **BackgroundTasks** is fine; anything heavier belongs in a real queue or worker.
+
+## Habits
+
+- No **`print`** in app code; **`logging.getLogger(__name__)`** with parametric messages; no secrets in logs.
+- **`str | None`** and type hints on public functions; thin routes, **service layer** for business rules and external APIs; map domain errors to JSON via handlers.
+

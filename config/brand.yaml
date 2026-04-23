@@ -1,0 +1,22 @@
+# Optional brand + compliance config (loaded from repo `config/brand.yaml`).
+# Omit keys you do not need; the pipeline uses safe defaults for missing file.
+
+# Flag campaign copy that contains these whole words (case-insensitive).
+prohibited_words:
+  - guarantee
+  - cure
+  - miracle
+  - risk-free
+
+# Minimum WCAG-style contrast (approximate) between bright and dark regions
+# in the bottom strip of the rendered creative. Large text: 3.0 is a common bar.
+min_contrast_ratio: 3.0
+
+# Optional: relative to repo root — if set, the file must exist (brand pack readiness).
+# This does not stamp the logo on the image; it verifies the asset is present.
+logo_path: null
+
+# Optional: primary sRGB as #rrggbb — if set, a small fraction of pixels in the
+# output should be near this color (loose check; disable by omitting).
+# primary_color: "#1a3a5c"
+# min_primary_color_coverage: 0.0001

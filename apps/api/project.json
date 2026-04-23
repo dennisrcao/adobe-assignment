@@ -1,0 +1,32 @@
+{
+  "name": "api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/api/src",
+  "targets": {
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv sync && .venv/bin/python -m uvicorn src.main:app --reload --reload-dir=src --reload-dir=../../packages/campaign-schema --host 0.0.0.0 --port 8000",
+        "cwd": "apps/api"
+      }
+    },
+    "install": {
+      "executor": "@nxlv/python:run-commands",
+      "options": { "command": "uv sync", "cwd": "apps/api" }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": { "command": "uv run ruff check src/", "cwd": "apps/api" }
+    },
+    "format": {
+      "executor": "@nxlv/python:run-commands",
+      "options": { "command": "uv run ruff format src/", "cwd": "apps/api" }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": { "command": "uv run pytest", "cwd": "apps/api" }
+    }
+  },
+  "tags": ["api", "python", "fastapi"]
+}
