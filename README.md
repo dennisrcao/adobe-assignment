@@ -10,6 +10,7 @@ Process items are **your** responsibility (not verified by code):
 
 - **Public GitHub repository** with this pipeline and a **comprehensive README** (this file).
 - **2–3 minute recorded demo** showing the app running locally and how to install, set API keys, and generate output. Per Adobe’s process, send the video to your **Talent Partner at least one day before** the interview so reviewers can follow along.
+  - **Recording:** [AdobeClip1+2 (Google Drive)](https://drive.google.com/file/d/1bZDBvgo_j0P1jx8j4XqecBUX029vwH_7/view?usp=sharing) — hosted outside the repo because the asset is over GitHub’s **100MB** per-file limit for normal repository contents.
 - **Live session** (~30 minutes) — be ready to walk through design tradeoffs and how to run the project cold from the README.
 
 ---
